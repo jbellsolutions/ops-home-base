@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ops Home Base — AI-Powered Operations Command Center</title>
+<meta name="description" content="Manage ClickUp, CRM, Gmail, and Calendar from one place — powered by Claude Code + MCP integrations.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════
+   CSS VARIABLES & RESET
+   ═══════════════════════════════════════════════════════ */
+:root {
+  --bg-primary: #0f1117;
+  --bg-card: #1a1d27;
+  --bg-card-hover: #1e2130;
+  --bg-elevated: #222639;
+  --border: #2d3148;
+  --border-hover: #3d4168;
+  --text-primary: #f0f1f5;
+  --text-secondary: #9ca3b8;
+  --text-muted: #6b7394;
+  --accent: #7c5cfc;
+  --accent-glow: rgba(124, 92, 252, 0.25);
+  --accent-subtle: rgba(124, 92, 252, 0.12);
+  --success: #34d399;
+  --success-glow: rgba(52, 211, 153, 0.2);
+  --warning: #fbbf24;
+  --warning-glow: rgba(251, 191, 36, 0.2);
+  --urgent: #ef4444;
+  --urgent-glow: rgba(239, 68, 68, 0.2);
+  --info: #60a5fa;
+  --info-glow: rgba(96, 165, 250, 0.2);
+  --teal: #2dd4bf;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-xs: 6px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,0.35), 0 4px 10px rgba(0,0,0,0.2);
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
+
+/* ═══════════════════════════════════════════════════════
+   LAYOUT
+   ═══════════════════════════════════════════════════════ */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+section { padding: 32px 0; }
+
+/* ═══════════════════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════════════════ */
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.85); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-in {
+  animation: fadeInUp 0.5s ease-out both;
+}
+
+.animate-in:nth-child(1) { animation-delay: 0.05s; }
+.animate-in:nth-child(2) { animation-delay: 0.1s; }
+.animate-in:nth-child(3) { animation-delay: 0.15s; }
+.animate-in:nth-child(4) { animation-delay: 0.2s; }
+.animate-in:nth-child(5) { animation-delay: 0.25s; }
+.animate-in:nth-child(6) { animation-delay: 0.3s; }
+.animate-in:nth-child(7) { animation-delay: 0.35s; }
+.animate-in:nth-child(8) { animation-delay: 0.4s; }
+
+/* ═══════════════════════════════════════════════════════
+   CARD BASE
+   ═══════════════════════════════════════════════════════ */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+}
+
+.card:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  transform: translateY(-2px);
+}
+
+.card-header {
+  padding: 20px 24px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+
+.card-header h3 {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-header .badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--accent-subtle);
+  color: var(--accent);
+}
+
+.card-body {
+  padding: 16px 24px 20px;
+  max-height: 480px;
+  overflow-y: auto;
+}
+
+/* ═══════════════════════════════════════════════════════
+   HERO HEADER
+   ═══════════════════════════════════════════════════════ */
+.hero {
+  position: relative;
+  padding: 64px 0 48px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #7c5cfc15 0%, #0f111700 25%, #34d39910 50%, #0f111700 75%, #60a5fa10 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+
+.hero-content { position: relative; z-index: 1; }
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-subtle);
+  border: 1px solid rgba(124, 92, 252, 0.2);
+  border-radius: 20px;
+  padding: 6px 16px;
+  margin-bottom: 24px;
+}
+
+.hero h1 {
+  font-size: clamp(36px, 5vw, 56px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero h2 {
+  font-size: clamp(18px, 2.5vw, 24px);
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.hero .tagline {
+  font-size: 15px;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin: 0 auto 32px;
+}
+
+/* Connection chips */
+.connection-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all var(--transition);
+}
+
+.chip:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-elevated);
+}
+
+.chip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.chip-dot.connected {
+  background: var(--success);
+  box-shadow: 0 0 6px var(--success-glow);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.chip-dot.setup {
+  background: var(--warning);
+  box-shadow: 0 0 6px var(--warning-glow);
+}
+
+/* ═══════════════════════════════════════════════════════
+   STATS ROW
+   ═══════════════════════════════════════════════════════ */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  padding: 32px 0;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  transition: all var(--transition);
+}
+
+.stat-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  transform: translateY(-2px);
+}
+
+.stat-icon {
+  font-size: 20px;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.progress-bar {
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin-top: 12px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--accent), #a78bfa);
+  transition: width 1s ease;
+}
+
+.stat-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   MAIN GRID
+   ═══════════════════════════════════════════════════════ */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 0 0 32px;
+}
+
+.column { display: flex; flex-direction: column; gap: 20px; }
+
+/* ═══════════════════════════════════════════════════════
+   CALENDAR CARD
+   ═══════════════════════════════════════════════════════ */
+.day-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin: 16px 0 10px;
+}
+
+.day-label:first-child { margin-top: 0; }
+
+.cal-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(45, 49, 72, 0.5);
+}
+
+.cal-item:last-child { border-bottom: none; }
+
+.cal-time {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  min-width: 58px;
+  padding-top: 1px;
+  white-space: nowrap;
+}
+
+.cal-details { flex: 1; min-width: 0; }
+
+.cal-title {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.cal-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.cal-meta span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   TASKS CARD
+   ═══════════════════════════════════════════════════════ */
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  margin: 4px 0;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid transparent;
+  transition: background var(--transition);
+}
+
+.task-item:hover { background: rgba(45, 49, 72, 0.3); }
+
+.task-item.priority-urgent { border-left-color: var(--urgent); }
+.task-item.priority-high { border-left-color: var(--warning); }
+.task-item.priority-normal { border-left-color: var(--info); }
+.task-item.priority-low { border-left-color: var(--text-muted); }
+
+.task-check {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border-hover);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-size: 10px;
+  color: transparent;
+}
+
+.task-check:hover { border-color: var(--accent); }
+
+.task-check.done {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.task-info { flex: 1; min-width: 0; }
+
+.task-name {
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.task-name.done {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.task-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 3px;
+}
+
+.task-assignee {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 8px;
+  border-radius: 10px;
+}
+
+.assignee-you { background: rgba(124, 92, 252, 0.15); color: var(--accent); }
+.assignee-sarah { background: rgba(45, 212, 191, 0.15); color: var(--teal); }
+.assignee-team { background: rgba(96, 165, 250, 0.15); color: var(--info); }
+
+.task-due {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ═══════════════════════════════════════════════════════
+   EMAIL CARD
+   ═══════════════════════════════════════════════════════ */
+.email-item {
+  display: flex;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(45, 49, 72, 0.5);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.email-item:last-child { border-bottom: none; }
+.email-item:hover { opacity: 0.85; }
+
+.email-dot-col {
+  padding-top: 5px;
+  flex-shrink: 0;
+  width: 10px;
+}
+
+.email-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.email-dot.read { background: transparent; }
+
+.email-content { flex: 1; min-width: 0; }
+
+.email-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 3px;
+}
+
+.email-sender {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.email-sender.unread { color: var(--text-primary); }
+.email-sender.read { color: var(--text-secondary); }
+
+.email-time {
+  font-size: 11px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.email-subject {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+
+.email-snippet {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.5;
+}
+
+/* ═══════════════════════════════════════════════════════
+   CRM CARD
+   ═══════════════════════════════════════════════════════ */
+.pipeline {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.pipe-stage {
+  text-align: center;
+  padding: 14px 8px;
+  border-radius: var(--radius-sm);
+  background: rgba(45, 49, 72, 0.3);
+  border: 1px solid var(--border);
+  transition: all var(--transition);
+}
+
+.pipe-stage:hover {
+  background: rgba(45, 49, 72, 0.5);
+  border-color: var(--border-hover);
+}
+
+.pipe-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.pipe-count {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.pipe-bar {
+  height: 3px;
+  border-radius: 2px;
+  margin: 0 auto;
+}
+
+.pipe-lead .pipe-count { color: var(--info); }
+.pipe-lead .pipe-bar { background: var(--info); width: 100%; }
+
+.pipe-qualified .pipe-count { color: var(--teal); }
+.pipe-qualified .pipe-bar { background: var(--teal); width: 75%; }
+
+.pipe-proposal .pipe-count { color: var(--warning); }
+.pipe-proposal .pipe-bar { background: var(--warning); width: 55%; }
+
+.pipe-closed .pipe-count { color: var(--success); }
+.pipe-closed .pipe-bar { background: var(--success); width: 40%; }
+
+.crm-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 16px 0;
+}
+
+.crm-section-title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.crm-activity {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 0;
+}
+
+.crm-activity-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.crm-activity-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  flex: 1;
+}
+
+.crm-activity-text strong { color: var(--text-primary); font-weight: 600; }
+
+.crm-activity-time {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   QUICK ACTIONS
+   ═══════════════════════════════════════════════════════ */
+.quick-actions {
+  position: relative;
+  padding: 48px 0;
+}
+
+.quick-actions::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent, rgba(124, 92, 252, 0.03), transparent);
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.section-header h2 {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+.section-header p {
+  font-size: 15px;
+  color: var(--text-muted);
+}
+
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  position: relative;
+}
+
+.action-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.action-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px var(--accent-glow);
+  transform: translateY(-3px);
+}
+
+.action-icon {
+  font-size: 22px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.action-label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.action-example {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* ═══════════════════════════════════════════════════════
+   HOW IT WORKS
+   ═══════════════════════════════════════════════════════ */
+.how-it-works {
+  padding: 48px 0;
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.step-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px 28px;
+  text-align: center;
+  transition: all var(--transition);
+  position: relative;
+}
+
+.step-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  transform: translateY(-3px);
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent-subtle);
+  border: 2px solid var(--accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+.step-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.step-card p {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════════════════
+   INTEGRATIONS
+   ═══════════════════════════════════════════════════════ */
+.integrations {
+  padding: 48px 0;
+}
+
+.integrations-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.integration-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 20px;
+  text-align: center;
+  transition: all var(--transition);
+}
+
+.integration-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.integration-icon {
+  font-size: 32px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.integration-name {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.integration-status {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.status-connected { color: var(--success); }
+.status-coming { color: var(--text-muted); }
+
+/* ═══════════════════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════════════════ */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 0;
+  text-align: center;
+}
+
+.footer-brand {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text-secondary);
+}
+
+.footer-brand span { color: var(--accent); }
+
+.footer-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 12px;
+}
+
+.footer-links a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+.footer-links a:hover { color: var(--accent); }
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .main-grid { grid-template-columns: 1fr; }
+  .actions-grid { grid-template-columns: repeat(2, 1fr); }
+  .integrations-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .container { padding: 0 16px; }
+  .hero { padding: 48px 0 32px; }
+  .stats-row { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .stat-card { padding: 16px; }
+  .stat-value { font-size: 22px; }
+  .steps-grid { grid-template-columns: 1fr; }
+  .actions-grid { grid-template-columns: 1fr; }
+  .integrations-grid { grid-template-columns: 1fr 1fr; }
+  .pipeline { grid-template-columns: repeat(2, 1fr); }
+  .connection-chips { gap: 6px; }
+  .chip { padding: 6px 12px; font-size: 12px; }
+  .card-body { padding: 12px 16px 16px; }
+  .card-header { padding: 16px 16px 12px; }
+}
+
+@media (max-width: 380px) {
+  .stats-row { grid-template-columns: 1fr; }
+  .integrations-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     HERO HEADER
+     ═══════════════════════════════════════════ -->
+<header class="hero">
+  <div class="container hero-content">
+    <div class="hero-badge">
+      <span>&#9889;</span> Open-Source Operations Template
+    </div>
+    <h1>Ops Home Base</h1>
+    <h2>Your AI-Powered Operations Command Center</h2>
+    <p class="tagline">Manage ClickUp, CRM, Gmail, and Calendar from one place &mdash; powered by Claude Code + MCP integrations</p>
+    <div class="connection-chips">
+      <div class="chip">
+        <span class="chip-dot connected"></span>
+        ClickUp
+      </div>
+      <div class="chip">
+        <span class="chip-dot connected"></span>
+        Gmail
+      </div>
+      <div class="chip">
+        <span class="chip-dot connected"></span>
+        Google Calendar
+      </div>
+      <div class="chip">
+        <span class="chip-dot setup"></span>
+        CRM &mdash; Setup Needed
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════
+     STATS ROW
+     ═══════════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <div class="stats-row">
+      <div class="stat-card animate-in">
+        <span class="stat-icon">&#9745;</span>
+        <div class="stat-value">12</div>
+        <div class="stat-label">Tasks This Week</div>
+        <div class="progress-bar"><div class="progress-fill" style="width: 58%"></div></div>
+        <div class="stat-sub">7 of 12 completed</div>
+      </div>
+      <div class="stat-card animate-in">
+        <span class="stat-icon">&#128197;</span>
+        <div class="stat-value">3</div>
+        <div class="stat-label">Meetings Today</div>
+        <div class="stat-sub">Next: 2:00 PM &mdash; Client Call</div>
+      </div>
+      <div class="stat-card animate-in">
+        <span class="stat-icon">&#9993;</span>
+        <div class="stat-value">8</div>
+        <div class="stat-label">Unread Emails</div>
+        <div class="stat-sub">3 flagged as important</div>
+      </div>
+      <div class="stat-card animate-in">
+        <span class="stat-icon">&#128101;</span>
+        <div class="stat-value">47</div>
+        <div class="stat-label">Active CRM Contacts</div>
+        <div class="stat-sub">5 need follow-up</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     MAIN 2-COLUMN GRID
+     ═══════════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <div class="main-grid">
+
+      <!-- ——— LEFT COLUMN ——— -->
+      <div class="column">
+
+        <!-- Calendar Card -->
+        <div class="card animate-in">
+          <div class="card-header">
+            <h3>&#128197; Today's Schedule</h3>
+            <span class="badge">3 remaining</span>
+          </div>
+          <div class="card-body">
+            <div class="day-label">Today &mdash; Monday, Mar 23</div>
+
+            <div class="cal-item">
+              <div class="cal-time">9:00 AM</div>
+              <div class="cal-details">
+                <div class="cal-title">Team Standup</div>
+                <div class="cal-meta">
+                  <span>&#128247; Zoom</span>
+                  <span>&#128101; 6 attendees</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="cal-item">
+              <div class="cal-time">11:30 AM</div>
+              <div class="cal-details">
+                <div class="cal-title">Client Discovery Call &mdash; Acme Corp</div>
+                <div class="cal-meta">
+                  <span>&#128247; Google Meet</span>
+                  <span>&#128101; 3 attendees</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="cal-item">
+              <div class="cal-time">2:00 PM</div>
+              <div class="cal-details">
+                <div class="cal-title">1:1 with Ops Lead</div>
+                <div class="cal-meta">
+                  <span>&#128247; Zoom</span>
+                  <span>&#128101; 2 attendees</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="cal-item">
+              <div class="cal-time">4:00 PM</div>
+              <div class="cal-details">
+                <div class="cal-title">Weekly Ops Review</div>
+                <div class="cal-meta">
+                  <span>&#127970; Conf Room B</span>
+                  <span>&#128101; 8 attendees</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="day-label">Tomorrow &mdash; Tuesday, Mar 24</div>
+
+            <div class="cal-item">
+              <div class="cal-time">10:00 AM</div>
+              <div class="cal-details">
+                <div class="cal-title">Sprint Planning</div>
+                <div class="cal-meta">
+                  <span>&#128247; Zoom</span>
+                  <span>&#128101; 5 attendees</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="cal-item">
+              <div class="cal-time">1:00 PM</div>
+              <div class="cal-details">
+                <div class="cal-title">Vendor Check-In &mdash; DataSync</div>
+                <div class="cal-meta">
+                  <span>&#128222; Phone</span>
+                  <span>&#128101; 2 attendees</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="cal-item">
+              <div class="cal-time">3:30 PM</div>
+              <div class="cal-details">
+                <div class="cal-title">Marketing x Ops Sync</div>
+                <div class="cal-meta">
+                  <span>&#128247; Google Meet</span>
+                  <span>&#128101; 4 attendees</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tasks Card -->
+        <div class="card animate-in">
+          <div class="card-header">
+            <h3>&#9889; Active Sprint</h3>
+            <span class="badge">Sprint 14</span>
+          </div>
+          <div class="card-body">
+            <div class="task-item priority-urgent">
+              <div class="task-check done">&#10003;</div>
+              <div class="task-info">
+                <div class="task-name done">Finalize Q1 operations report</div>
+                <div class="task-meta">
+                  <span class="task-assignee assignee-you">You</span>
+                  <span class="task-due">Due: Mar 21</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="task-item priority-urgent">
+              <div class="task-check"></div>
+              <div class="task-info">
+                <div class="task-name">Resolve CRM data sync issues</div>
+                <div class="task-meta">
+                  <span class="task-assignee assignee-you">You</span>
+                  <span class="task-due">Due: Mar 23</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="task-item priority-high">
+              <div class="task-check"></div>
+              <div class="task-info">
+                <div class="task-name">Launch email campaign &mdash; Spring Promo</div>
+                <div class="task-meta">
+                  <span class="task-assignee assignee-sarah">Sarah</span>
+                  <span class="task-due">Due: Mar 24</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="task-item priority-high">
+              <div class="task-check done">&#10003;</div>
+              <div class="task-info">
+                <div class="task-name done">Update onboarding workflow in ClickUp</div>
+                <div class="task-meta">
+                  <span class="task-assignee assignee-team">Team</span>
+                  <span class="task-due">Due: Mar 22</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="task-item priority-normal">
+              <div class="task-check"></div>
+              <div class="task-info">
+                <div class="task-name">Clean up inactive CRM contacts</div>
+                <div class="task-meta">
+                  <span class="task-assignee assignee-sarah">Sarah</span>
+                  <span class="task-due">Due: Mar 25</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="task-item priority-normal">
+              <div class="task-check"></div>
+              <div class="task-info">
+                <div class="task-name">Draft SOPs for client offboarding</div>
+                <div class="task-meta">
+                  <span class="task-assignee assignee-you">You</span>
+                  <span class="task-due">Due: Mar 26</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="task-item priority-normal">
+              <div class="task-check done">&#10003;</div>
+              <div class="task-info">
+                <div class="task-name done">Set up weekly reporting automation</div>
+                <div class="task-meta">
+                  <span class="task-assignee assignee-team">Team</span>
+                  <span class="task-due">Due: Mar 20</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="task-item priority-low">
+              <div class="task-check"></div>
+              <div class="task-info">
+                <div class="task-name">Research new project management integrations</div>
+                <div class="task-meta">
+                  <span class="task-assignee assignee-sarah">Sarah</span>
+                  <span class="task-due">Due: Mar 28</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ——— RIGHT COLUMN ——— -->
+      <div class="column">
+
+        <!-- Email Card -->
+        <div class="card animate-in">
+          <div class="card-header">
+            <h3>&#9993; Recent Emails</h3>
+            <span class="badge">8 unread</span>
+          </div>
+          <div class="card-body">
+            <div class="email-item">
+              <div class="email-dot-col"><div class="email-dot"></div></div>
+              <div class="email-content">
+                <div class="email-top">
+                  <span class="email-sender unread">Rachel Kim</span>
+                  <span class="email-time">10:24 AM</span>
+                </div>
+                <div class="email-subject">Re: Q2 Partnership Proposal</div>
+                <div class="email-snippet">Hi, I've reviewed the updated terms and everything looks good on our end. Let's schedule a quick call this week to finalize the details before...</div>
+              </div>
+            </div>
+
+            <div class="email-item">
+              <div class="email-dot-col"><div class="email-dot"></div></div>
+              <div class="email-content">
+                <div class="email-top">
+                  <span class="email-sender unread">Marcus Johnson</span>
+                  <span class="email-time">9:47 AM</span>
+                </div>
+                <div class="email-subject">Sprint 14 &mdash; Status Update</div>
+                <div class="email-snippet">Team, here's the weekly update: We're on track for 3 of 5 deliverables. The CRM migration is behind by 2 days but we have a plan to catch up...</div>
+              </div>
+            </div>
+
+            <div class="email-item">
+              <div class="email-dot-col"><div class="email-dot"></div></div>
+              <div class="email-content">
+                <div class="email-top">
+                  <span class="email-sender unread">CRM System</span>
+                  <span class="email-time">9:12 AM</span>
+                </div>
+                <div class="email-subject">New Lead Assigned: DataFlow Solutions</div>
+                <div class="email-snippet">A new lead has been assigned to you. Company: DataFlow Solutions. Contact: Jamie Torres, VP of Operations. Source: Website form...</div>
+              </div>
+            </div>
+
+            <div class="email-item">
+              <div class="email-dot-col"><div class="email-dot read"></div></div>
+              <div class="email-content">
+                <div class="email-top">
+                  <span class="email-sender read">Lisa Chen &mdash; Vendor</span>
+                  <span class="email-time">Yesterday</span>
+                </div>
+                <div class="email-subject">Re: Contract Renewal &mdash; Action Required</div>
+                <div class="email-snippet">Just following up on the renewal terms we discussed. The pricing holds through end of month. Please let me know if you need any adjustments...</div>
+              </div>
+            </div>
+
+            <div class="email-item">
+              <div class="email-dot-col"><div class="email-dot read"></div></div>
+              <div class="email-content">
+                <div class="email-top">
+                  <span class="email-sender read">Google Calendar</span>
+                  <span class="email-time">Yesterday</span>
+                </div>
+                <div class="email-subject">Invitation: Sprint Planning (Tuesday 10:00 AM)</div>
+                <div class="email-snippet">You've been invited to Sprint Planning by Marcus Johnson. Tuesday, March 24 at 10:00 AM. Location: Zoom. Accept / Decline / Maybe...</div>
+              </div>
+            </div>
+
+            <div class="email-item">
+              <div class="email-dot-col"><div class="email-dot read"></div></div>
+              <div class="email-content">
+                <div class="email-top">
+                  <span class="email-sender read">Ops Weekly Digest</span>
+                  <span class="email-time">Yesterday</span>
+                </div>
+                <div class="email-subject">Your Weekly Operations Roundup</div>
+                <div class="email-snippet">This week in ops: 47 active contacts, 12 tasks tracked, 3 deals in pipeline. Top performing campaign: Spring Promo (23% open rate)...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CRM Card -->
+        <div class="card animate-in">
+          <div class="card-header">
+            <h3>&#128200; Pipeline Overview</h3>
+            <span class="badge">$184K total</span>
+          </div>
+          <div class="card-body">
+            <div class="pipeline">
+              <div class="pipe-stage pipe-lead">
+                <div class="pipe-label">Lead</div>
+                <div class="pipe-count">18</div>
+                <div class="pipe-bar"></div>
+              </div>
+              <div class="pipe-stage pipe-qualified">
+                <div class="pipe-label">Qualified</div>
+                <div class="pipe-count">12</div>
+                <div class="pipe-bar"></div>
+              </div>
+              <div class="pipe-stage pipe-proposal">
+                <div class="pipe-label">Proposal</div>
+                <div class="pipe-count">9</div>
+                <div class="pipe-bar"></div>
+              </div>
+              <div class="pipe-stage pipe-closed">
+                <div class="pipe-label">Closed</div>
+                <div class="pipe-count">8</div>
+                <div class="pipe-bar"></div>
+              </div>
+            </div>
+
+            <hr class="crm-divider">
+            <div class="crm-section-title">Recent Activity</div>
+
+            <div class="crm-activity">
+              <div class="crm-activity-icon" style="background: rgba(96,165,250,0.15);">&#128308;</div>
+              <div>
+                <div class="crm-activity-text"><strong>New lead:</strong> DataFlow Solutions added to pipeline</div>
+                <div class="crm-activity-time">Today, 9:12 AM</div>
+              </div>
+            </div>
+
+            <div class="crm-activity">
+              <div class="crm-activity-icon" style="background: rgba(251,191,36,0.15);">&#128230;</div>
+              <div>
+                <div class="crm-activity-text"><strong>Proposal sent:</strong> Acme Corp &mdash; $32,000 annual contract</div>
+                <div class="crm-activity-time">Yesterday, 4:30 PM</div>
+              </div>
+            </div>
+
+            <div class="crm-activity">
+              <div class="crm-activity-icon" style="background: rgba(52,211,153,0.15);">&#127881;</div>
+              <div>
+                <div class="crm-activity-text"><strong>Deal closed:</strong> NorthStar Inc &mdash; $18,500</div>
+                <div class="crm-activity-time">Yesterday, 11:15 AM</div>
+              </div>
+            </div>
+
+            <div class="crm-activity">
+              <div class="crm-activity-icon" style="background: rgba(124,92,252,0.15);">&#128340;</div>
+              <div>
+                <div class="crm-activity-text"><strong>Follow-up scheduled:</strong> BrightWave Media &mdash; Mar 25</div>
+                <div class="crm-activity-time">Yesterday, 9:00 AM</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     QUICK ACTIONS
+     ═══════════════════════════════════════════ -->
+<section class="quick-actions">
+  <div class="container">
+    <div class="section-header">
+      <h2>&#128172; Just Ask Claude</h2>
+      <p>Natural language commands for your entire operations stack</p>
+    </div>
+    <div class="actions-grid">
+      <div class="action-card animate-in">
+        <span class="action-icon">&#9745;</span>
+        <div class="action-label">Create a Task</div>
+        <div class="action-example">"Create a task for Sarah to review the Q2 marketing plan by Friday"</div>
+      </div>
+      <div class="action-card animate-in">
+        <span class="action-icon">&#128197;</span>
+        <div class="action-label">Check Calendar</div>
+        <div class="action-example">"What's on my calendar tomorrow?"</div>
+      </div>
+      <div class="action-card animate-in">
+        <span class="action-icon">&#128232;</span>
+        <div class="action-label">Check Email</div>
+        <div class="action-example">"Any important unread emails from clients?"</div>
+      </div>
+      <div class="action-card animate-in">
+        <span class="action-icon">&#128202;</span>
+        <div class="action-label">Project Status</div>
+        <div class="action-example">"What's the team working on this week?"</div>
+      </div>
+      <div class="action-card animate-in">
+        <span class="action-icon">&#9997;</span>
+        <div class="action-label">Draft Email</div>
+        <div class="action-example">"Draft a follow-up email to Rachel about the partnership"</div>
+      </div>
+      <div class="action-card animate-in">
+        <span class="action-icon">&#128198;</span>
+        <div class="action-label">Schedule Meeting</div>
+        <div class="action-example">"Book a 30-min call with the team on Thursday at 2pm"</div>
+      </div>
+      <div class="action-card animate-in">
+        <span class="action-icon">&#128178;</span>
+        <div class="action-label">Update CRM</div>
+        <div class="action-example">"Move the Acme Corp deal to proposal stage"</div>
+      </div>
+      <div class="action-card animate-in">
+        <span class="action-icon">&#128203;</span>
+        <div class="action-label">Run Report</div>
+        <div class="action-example">"Give me a weekly ops summary with key metrics"</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     HOW IT WORKS
+     ═══════════════════════════════════════════ -->
+<section class="how-it-works">
+  <div class="container">
+    <div class="section-header">
+      <h2>How It Works</h2>
+      <p>Three steps to a unified operations command center</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card animate-in">
+        <div class="step-number">1</div>
+        <h3>Connect Your Tools</h3>
+        <p>Link ClickUp, Gmail, Calendar, and your CRM through MCP integrations. No coding required &mdash; just authenticate and go.</p>
+      </div>
+      <div class="step-card animate-in">
+        <div class="step-number">2</div>
+        <h3>Talk to Claude</h3>
+        <p>Just describe what you need in plain English. Claude reads, writes, and manages across all your connected tools simultaneously.</p>
+      </div>
+      <div class="step-card animate-in">
+        <div class="step-number">3</div>
+        <h3>Stay in Control</h3>
+        <p>Review changes before they happen. Get status updates, manage projects, and send communications &mdash; all from one place.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SUPPORTED INTEGRATIONS
+     ═══════════════════════════════════════════ -->
+<section class="integrations">
+  <div class="container">
+    <div class="section-header">
+      <h2>Supported Integrations</h2>
+      <p>Connect your favorite tools via MCP (Model Context Protocol)</p>
+    </div>
+    <div class="integrations-grid">
+      <div class="integration-card animate-in">
+        <span class="integration-icon">&#128203;</span>
+        <div class="integration-name">ClickUp</div>
+        <div class="integration-status status-connected">&#9679; Connected via MCP</div>
+      </div>
+      <div class="integration-card animate-in">
+        <span class="integration-icon">&#128293;</span>
+        <div class="integration-name">Go High Level</div>
+        <div class="integration-status status-connected">&#9679; Connected via MCP</div>
+      </div>
+      <div class="integration-card animate-in">
+        <span class="integration-icon">&#9993;</span>
+        <div class="integration-name">Gmail</div>
+        <div class="integration-status status-connected">&#9679; Connected via MCP</div>
+      </div>
+      <div class="integration-card animate-in">
+        <span class="integration-icon">&#128197;</span>
+        <div class="integration-name">Google Calendar</div>
+        <div class="integration-status status-connected">&#9679; Connected via MCP</div>
+      </div>
+      <div class="integration-card animate-in">
+        <span class="integration-icon">&#128172;</span>
+        <div class="integration-name">Slack</div>
+        <div class="integration-status status-connected">&#9679; Connected via MCP</div>
+      </div>
+      <div class="integration-card animate-in">
+        <span class="integration-icon">&#128992;</span>
+        <div class="integration-name">HubSpot</div>
+        <div class="integration-status status-coming">Coming Soon</div>
+      </div>
+      <div class="integration-card animate-in">
+        <span class="integration-icon">&#128221;</span>
+        <div class="integration-name">Notion</div>
+        <div class="integration-status status-connected">&#9679; Connected via MCP</div>
+      </div>
+      <div class="integration-card animate-in">
+        <span class="integration-icon">&#128193;</span>
+        <div class="integration-name">Google Drive</div>
+        <div class="integration-status status-connected">&#9679; Connected via MCP</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-brand">Ops Home Base &mdash; Powered by <span>Claude Code</span> + MCP Integrations</div>
+    <div class="footer-sub">Built by UsingAIToScale.com</div>
+    <div class="footer-links">
+      <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://usingaitoscale.com" target="_blank" rel="noopener">Website</a>
+      <a href="https://docs.anthropic.com" target="_blank" rel="noopener">Claude Docs</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════
+     SCROLL ANIMATIONS
+     ═══════════════════════════════════════════ -->
+<script>
+// Intersection Observer for scroll-triggered animations
+document.addEventListener('DOMContentLoaded', () => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.animationPlayState = 'running';
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.animate-in').forEach(el => {
+    el.style.animationPlayState = 'paused';
+    observer.observe(el);
+  });
+
+  // Task checkbox toggle (interactive demo)
+  document.querySelectorAll('.task-check').forEach(check => {
+    check.addEventListener('click', () => {
+      check.classList.toggle('done');
+      const name = check.nextElementSibling?.querySelector('.task-name');
+      if (name) name.classList.toggle('done');
+      check.textContent = check.classList.contains('done') ? '\u2713' : '';
+    });
+  });
+});
+</script>
+
+</body>
+</html>
