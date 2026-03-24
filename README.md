@@ -123,3 +123,16 @@ Built by [UsingAIToScale.com](https://usingaitoscale.com) — helping businesses
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
+
+## Sales & Marketing Materials
+
+The `sales/` directory contains the complete sales offer for this product including:
+- Full sales page copy (Todd Brown direct response style)
+- 5-email nurture sequence
+- Social media content (LinkedIn, Twitter, YouTube, Instagram)
+- Landing page copy
+- Cold outreach templates
+- Product ladder and pricing
+- Funnel architecture
+
+See also: [AI Integrators Sales Launch Kit](https://github.com/jbellsolutions/ai-integrators-sales-launch-kit) for all 5 offers in one place.
